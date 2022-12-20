@@ -1,7 +1,5 @@
 package com.mulagiHub.DailyRevenueSummaryTelegramBot;
 
-import com.mulagiHub.DailyRevenueSummaryTelegramBot.dto.SumRevenue;
-import com.mulagiHub.DailyRevenueSummaryTelegramBot.handlers.AfricomRevenueHandler;
 import com.mulagiHub.DailyRevenueSummaryTelegramBot.models.main.Customer;
 import com.mulagiHub.DailyRevenueSummaryTelegramBot.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -37,10 +32,12 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     private Home home;
     @Autowired
     CustomerAccount customerAccount;
-    @Autowired
-    AfricomRevenueHandler africomRevenueHandler;
 
-    public ScheduledMessageBot(@Value("${bot.BOT_TOKEN}")String botToken,  @Value("${bot.BOT_USERNAME}")String botUsername) {
+    @Autowired
+    RevenueSummary revenueSummary;
+
+
+    public ScheduledMessageBot(@Value("${bot.BOT_TOKEN}") String botToken, @Value("${bot.BOT_USERNAME}") String botUsername) {
         BOT_TOKEN = botToken;
         BOT_USERNAME = botUsername;
     }
@@ -59,12 +56,6 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
 
-            } else if (update.getMessage().hasText() && update.getMessage().getText().equals("Send money \uD83D\uDCB0")) {
-                try {
-                    execute(sendMoney.sendMoneyPeerToPeer(update));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             } else if (update.getMessage().hasText() && update.getMessage().getText().equals("Register  \uD83C\uDD95")) {
                 if (Boolean.TRUE.equals(userService.existsByTelegramUserId(update.getMessage().getChat().getId()))) {
                     try {
@@ -80,13 +71,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                     }
                 }
 
-            } else if (update.getMessage().hasText() && update.getMessage().getText().equals("Account \uD83C\uDFE0")) {
-                try {
-                    execute(customerAccount.checkBalance(update));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (update.getMessage().getText().matches(regex)) {
+            }  else if (update.getMessage().getText().matches(regex)) {
 
                 if (Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionPreviousCustomerEnterPhoneNumber(update.getMessage().getChat().getId())) && Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionNextCustomerEnterNationalId(update.getMessage().getChat().getId()))) {
                     try {
@@ -122,8 +107,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else if (Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionPreviousConfirmRecipientDetails(update.getMessage().getChat().getId())) && Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionNextEnterPin(update.getMessage().getChat().getId()))) {
+                } else if (Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionPreviousConfirmRecipientDetails(update.getMessage().getChat().getId())) && Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionNextEnterPin(update.getMessage().getChat().getId()))) {
                     try {
                         execute(sendMoney.deleteMessagePinMessage(update));
                         execute(p2pSendMoney.confirmSenderPin(update));
@@ -132,8 +116,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else if (Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionPreviousConfirmCheckBalanceInitiation(update.getMessage().getChat().getId()))
+                } else if (Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionPreviousConfirmCheckBalanceInitiation(update.getMessage().getChat().getId()))
                         && Boolean.TRUE.equals(sessionService.findActiveRegistrationSessionNextConfirmCheckBalanceEnterPin(update.getMessage().getChat().getId()))) {
 
                     try {
@@ -143,8 +126,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else if (sessionService.findActiveSessionNextStageEnterRecipientMsisdn(update.getMessage().getChat().getId()) && sessionService.findActiveSessionPreviousStageInitiateSendMoney(update.getMessage().getChat().getId())
+                } else if (sessionService.findActiveSessionNextStageEnterRecipientMsisdn(update.getMessage().getChat().getId()) && sessionService.findActiveSessionPreviousStageInitiateSendMoney(update.getMessage().getChat().getId())
                         && update.getMessage().getText().length() == 10
                 ) {
 
@@ -161,15 +143,6 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 
                 try {
                     execute(sendMoney.acceptsTheDetails(update));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else if (update.getMessage().getText().equals("Send money") || update.getMessage().getText().contains("*")) {
-
-                try {
-                    execute(sendMoney.deleteMessagePinMessage(update));
-                    execute(sendMoney.moneySent(update));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -202,15 +175,6 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
 
-        } else if (update.hasCallbackQuery() && update.getCallbackQuery().getData().equals("yes_confirm_recipient_p2p_details")
-
-        ) {
-            try {
-                execute(p2pSendMoney.enterPin(update));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -228,20 +192,67 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 
     @Scheduled(cron = "0 10 0 * * *")
     public void sendAfricomRevenue() {
-        List<String> summary = new ArrayList<>();
-        LocalDate now = LocalDate.now();
-        List<SumRevenue> revenues = africomRevenueHandler.findAllRevenue(String.valueOf(now));
-        summary.add(0,"Revenue Summary of Africom media limited on " + now.minus(Period.ofDays(1)) +" is as follows ");
-        for (SumRevenue revenue : revenues) {
-            int position = revenues.indexOf(revenue)+1 ;
-            summary.add("No." + position +" "+ revenue.getPartnerName() + " ==>  ksh " + revenue.getAmount() );
-
-        }
-        List<Customer>  customer = userService.findAllByStatusOrderByCreatedAt();
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenue("africom"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
         for (Customer value : customer) {
-            SendMessage message = new SendMessage();
+
             message.setChatId(String.valueOf(value.getTelegramUserId()));
-            message.setText(summary.toString().replaceAll("\\[|\\]", ""));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+    }
+//    @Scheduled(cron = "0 */2 * * * *")
+
+    @Scheduled(cron = "0 20 0 * * *")
+    public void sendBreakTimeRevenue() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenue("breaktime"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+
+    }
+
+
+    @Scheduled(cron = "0 30 0 * * *")
+    public void sendTajBuzzRevenue() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenue("tajbuzz"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+    }
+
+
+    @Scheduled(cron = "0 40 0 * * *")
+    public void sendZureeRevenue() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenue("zuree"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
             try {
                 execute(message);
             } catch (TelegramApiException e) {

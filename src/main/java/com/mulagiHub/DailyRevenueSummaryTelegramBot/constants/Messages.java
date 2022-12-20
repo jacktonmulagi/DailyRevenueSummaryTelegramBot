@@ -1,7 +1,7 @@
 package com.mulagiHub.DailyRevenueSummaryTelegramBot.constants;
 
 public class Messages {
-    public static final String welcomeNote = "Welcome to Kashyka Money Transfer service .Select service from the menu below";
+    public static final String welcomeNote = "Welcome to Africom revenue summary AI. Kindly select from the menu below .";
 
     public static final String HomeIcon = "Home \uD83C\uDFE0";
     public static final String backHome = "Select service from the menu below";
