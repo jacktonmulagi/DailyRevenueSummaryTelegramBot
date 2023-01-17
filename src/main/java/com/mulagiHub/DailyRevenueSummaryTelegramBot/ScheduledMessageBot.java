@@ -194,8 +194,59 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     public void sendAllRevenueMidNight() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("africom"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendBreakTimeMidNight() {
+        SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("breaktime"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendAllTajBuzMidNight() {
+        SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("tajbuzz"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendZureeMidNight() {
+        SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("zuree"));
         List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
         for (Customer value : customer) {
@@ -213,12 +264,27 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 //    @Scheduled(cron = "0 */2 * * * *")
 //sends at fixed rate
     @Scheduled(fixedRate = 3600000)
-    public void sendBreakTimeRevenue() {
+    public void sendAfricomRevenueFixed() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenueFixes("africom"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+
+    }
+    @Scheduled(fixedRate = 3600000)
+    public void sendBreakTimeRevenue() {
+        SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenueFixes("breaktime"));
-        message.setText(revenueSummary.summariesRevenueFixes("tajbuzz"));
-        message.setText(revenueSummary.summariesRevenueFixes("zuree"));
         List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
         for (Customer value : customer) {
 
@@ -234,6 +300,43 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 
     }
 
+
+    @Scheduled(fixedRate = 3600000)
+    public void sendTajBuzRevenue() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenueFixes("tajbuzz"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+
+    }
+
+    @Scheduled(fixedRate = 3600000)
+    public void sendZureeRevenue() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenueFixes("zuree"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+
+    }
 
 //    @Scheduled(cron = "0 30 0 * * *")
 //    public void sendTajBuzzRevenue() {
