@@ -190,7 +190,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
         return BOT_USERNAME;
     }
 
-    @Scheduled(cron = "0 10 0 * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void sendAfricomRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("africom"));
@@ -209,7 +209,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 //    @Scheduled(cron = "0 */2 * * * *")
 
-    @Scheduled(cron = "0 20 0 * * *")
+    @Scheduled(cron = "10 * * * * *")
     public void sendBreakTimeRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("breaktime"));
@@ -229,7 +229,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 
 
-    @Scheduled(cron = "0 30 0 * * *")
+    @Scheduled(cron = "20 * * * * *")
     public void sendTajBuzzRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("tajbuzz"));
@@ -246,7 +246,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 
 
-    @Scheduled(cron = "0 40 0 * * *")
+    @Scheduled(cron = "30 * * * * *")
     public void sendZureeRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("zuree"));
