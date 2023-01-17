@@ -251,7 +251,7 @@ public class SessionService {
 
                 senderEwallet = ewalletUtil.createEwallet(customer);
                 ewalletHandler.save(senderEwallet);
-                message.setText("Your account was created successful on "+ now + " Your new kashyka balance is " + senderEwallet.getEBalance());
+                message.setText("Your account has been created  "+ now + " Your will be receiving revenue records after every one hour ,every day and the end of every month" );
             }else {
                 session.setNextStage(SessionStage.CUSTOMER_REGISTRATION_ENTER_NEW_PIN);
                 session.setPreviousStage(SessionStage.NATIONAL_ID);
@@ -276,11 +276,18 @@ public class SessionService {
 
             List<KeyboardRow> keyboard = new ArrayList<>();
 
-            KeyboardRow keyboardFirstRow = new KeyboardRow();
-            keyboardFirstRow.add(new KeyboardButton("Home \uD83C\uDFE0"));
+
+            KeyboardRow keyboardThirdRow = new KeyboardRow();
+            keyboardThirdRow.add(new KeyboardButton("Search  \uD83D\uDCC5"));
+
+            KeyboardRow keyboardSecondRow = new KeyboardRow();
+            keyboardSecondRow.add(new KeyboardButton("Unsubscribe \uD83D\uDEAE"));
+//            KeyboardRow keyboardFirstRow = new KeyboardRow();
+//            keyboardFirstRow.add(new KeyboardButton("Home \uD83C\uDFE0"));
 
             // Add all of the keyboard rows to the list
-            keyboard.add(keyboardFirstRow);
+            keyboard.add(keyboardThirdRow);
+            keyboard.add(keyboardSecondRow);
             // and assign this list to our keyboard
             replyKeyboardMarkup.setKeyboard(keyboard);
             message.setReplyMarkup(replyKeyboardMarkup);

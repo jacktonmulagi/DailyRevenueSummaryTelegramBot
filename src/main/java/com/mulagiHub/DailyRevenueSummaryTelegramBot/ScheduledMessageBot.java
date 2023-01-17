@@ -56,7 +56,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
 
-            } else if (update.getMessage().hasText() && update.getMessage().getText().equals("Register  \uD83C\uDD95")) {
+            } else if (update.getMessage().hasText() && update.getMessage().getText().equals("Enroll  \uD83C\uDD95")) {
                 if (Boolean.TRUE.equals(userService.existsByTelegramUserId(update.getMessage().getChat().getId()))) {
                     try {
                         execute(registration.userExists(update));
@@ -190,10 +190,13 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
         return BOT_USERNAME;
     }
 
-    @Scheduled(fixedRate = 3600000)
-    public void sendAfricomRevenue() {
+    @Scheduled(cron = "0 0 0 * * *")
+    public void sendAllRevenueMidNight() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("africom"));
+        message.setText(revenueSummary.summariesRevenue("breaktime"));
+        message.setText(revenueSummary.summariesRevenue("tajbuzz"));
+        message.setText(revenueSummary.summariesRevenue("zuree"));
         List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
         for (Customer value : customer) {
 
@@ -208,11 +211,14 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 
     }
 //    @Scheduled(cron = "0 */2 * * * *")
-
-    @Scheduled(fixedRate = 3900000)
+//sends at fixed rate
+    @Scheduled(fixedRate = 3600000)
     public void sendBreakTimeRevenue() {
         SendMessage message = new SendMessage();
-        message.setText(revenueSummary.summariesRevenue("breaktime"));
+        message.setText(revenueSummary.summariesRevenueFixes("africom"));
+        message.setText(revenueSummary.summariesRevenueFixes("breaktime"));
+        message.setText(revenueSummary.summariesRevenueFixes("tajbuzz"));
+        message.setText(revenueSummary.summariesRevenueFixes("zuree"));
         List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
         for (Customer value : customer) {
 
@@ -229,36 +235,36 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 
 
-    @Scheduled(fixedRate = 4200000)
-    public void sendTajBuzzRevenue() {
-        SendMessage message = new SendMessage();
-        message.setText(revenueSummary.summariesRevenue("tajbuzz"));
-        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
-        for (Customer value : customer) {
-            message.setChatId(String.valueOf(value.getTelegramUserId()));
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                // log the
-            }
-        }
+//    @Scheduled(cron = "0 30 0 * * *")
+//    public void sendTajBuzzRevenue() {
+//        SendMessage message = new SendMessage();
+//        message.setText(revenueSummary.summariesRevenue("tajbuzz"));
+//        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+//        for (Customer value : customer) {
+//            message.setChatId(String.valueOf(value.getTelegramUserId()));
+//            try {
+//                execute(message);
+//            } catch (TelegramApiException e) {
+//                // log the
+//            }
+//        }
+//
+//    }
 
-    }
 
-
-    @Scheduled(fixedRate = 4500000)
-    public void sendZureeRevenue() {
-        SendMessage message = new SendMessage();
-        message.setText(revenueSummary.summariesRevenue("zuree"));
-        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
-        for (Customer value : customer) {
-            message.setChatId(String.valueOf(value.getTelegramUserId()));
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                // log the
-            }
-        }
-
-    }
+//    @Scheduled(cron = "0 40 0 * * *")
+//    public void sendZureeRevenue() {
+//        SendMessage message = new SendMessage();
+//        message.setText(revenueSummary.summariesRevenue("zuree"));
+//        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+//        for (Customer value : customer) {
+//            message.setChatId(String.valueOf(value.getTelegramUserId()));
+//            try {
+//                execute(message);
+//            } catch (TelegramApiException e) {
+//                // log the
+//            }
+//        }
+//
+//    }
 }

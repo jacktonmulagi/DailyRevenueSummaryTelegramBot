@@ -64,7 +64,7 @@ public class CustomerService {
 
             SendMessage message = new SendMessage();
             message.setChatId(update.getMessage().getChatId().toString());
-            message.setText("Enter your Id number️");
+            message.setText("Enter your company employee number");
 
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
             replyKeyboardMarkup.setSelective(true);

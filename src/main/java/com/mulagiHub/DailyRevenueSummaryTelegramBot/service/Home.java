@@ -44,15 +44,21 @@ public class Home {
 
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         keyboardSecondRow.add(new KeyboardButton("Unsubscribe \uD83D\uDCB0"));
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardThirdRow.add(new KeyboardButton("Search  \uD83D\uDCC5"));
+
+
 
 
         // Add all of the keyboard rows to the list
 
         if (Boolean.TRUE.equals(customerService.existsByTelegramUserId(update.getMessage().getChat().getId()))) {
             keyboard.add(keyboardSecondRow);
+            keyboard.add(keyboardThirdRow);
 
         } else {
             keyboard.add(keyboardFirstRow);
+
         }
 
 

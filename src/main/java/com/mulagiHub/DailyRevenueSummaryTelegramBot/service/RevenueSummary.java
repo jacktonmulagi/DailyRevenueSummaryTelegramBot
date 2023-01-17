@@ -60,4 +60,39 @@ public class RevenueSummary {
 
 
 
+    public String summariesRevenueFixes(String database) {
+        List<String> summary = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        List<SumRevenue> revenues = new ArrayList<>();
+        if(Objects.equals(database, "africom")){
+            summary.add(0,"Revenue Summary of Africom media limited on " + now );
+            revenues = africomRevenueHandler.findAllRevenue(String.valueOf(now));
+            System.out.println(revenues);
+        } else if (Objects.equals(database, "breaktime")) {
+            summary.add(0,"Revenue Summary of Breaktime  on " + now);
+            revenues = breakTimeRevenueHandler.findAllRevenue(String.valueOf(now));
+            System.out.println(revenues);
+        }
+        else if (Objects.equals(database, "tajbuzz")) {
+            summary.add(0,"Revenue Summary of Tajbuzz on " + now);
+            revenues = tajBuzzRevenueHandler.findAllRevenue(String.valueOf(now));
+            System.out.println(revenues);
+        }
+        else if (Objects.equals(database, "zuree")) {
+            summary.add(0,"Revenue Summary of Zuree on " + now);
+            revenues = zureeRevenueHandler.findAllRevenue(String.valueOf(now));
+            System.out.println(revenues);
+        }
+
+        for (SumRevenue revenue : revenues) {
+            int position = revenues.indexOf(revenue)+1 ;
+            summary.add("No." + position +" "+ revenue.getPartnerName() + " ==>  ksh " + revenue.getAmount() );
+
+        }
+        return summary.toString().replaceAll("\\[|\\]", "");
+
+    }
+
+
+
 }

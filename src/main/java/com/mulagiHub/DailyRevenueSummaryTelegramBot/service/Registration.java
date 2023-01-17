@@ -97,32 +97,34 @@ public class Registration {
 
 
 
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("Send money \uD83D\uDCB0"));
+
 
         KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardThirdRow.add(new KeyboardButton("withdraw money \uD83C\uDFE6"));
+        keyboardThirdRow.add(new KeyboardButton("Search  \uD83D\uDCC5"));
 
-        KeyboardRow keyboardForthRow = new KeyboardRow();
-        keyboardForthRow.add(new KeyboardButton("Deposit \uD83D\uDCB1"));
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton("Unsubscribe \uD83D\uDEAE"));
 
-
-        KeyboardRow keyboardFirthRow = new KeyboardRow();
-        keyboardFirthRow.add(new KeyboardButton("Buy Airtime \uD83D\uDCF1"));
-
-        KeyboardRow keyboardSixthRow = new KeyboardRow();
-        keyboardSixthRow.add(new KeyboardButton("Buy and for goods and service \uD83D\uDECD️"));
-
-        KeyboardRow keyboardSevenRow = new KeyboardRow();
-        keyboardSixthRow.add(new KeyboardButton("Account \uD83C\uDFE0"));
+//        KeyboardRow keyboardForthRow = new KeyboardRow();
+//        keyboardForthRow.add(new KeyboardButton("Deposit \uD83D\uDCB1"));
+//
+//
+//        KeyboardRow keyboardFirthRow = new KeyboardRow();
+//        keyboardFirthRow.add(new KeyboardButton("Buy Airtime \uD83D\uDCF1"));
+//
+//        KeyboardRow keyboardSixthRow = new KeyboardRow();
+//        keyboardSixthRow.add(new KeyboardButton("Buy and for goods and service \uD83D\uDECD️"));
+//
+//        KeyboardRow keyboardSevenRow = new KeyboardRow();
+//        keyboardSixthRow.add(new KeyboardButton("Account \uD83C\uDFE0"));
 
         // Add all of the keyboard rows to the list
         keyboard.add(keyboardSecondRow);
         keyboard.add(keyboardThirdRow);
-        keyboard.add(keyboardForthRow);
-        keyboard.add(keyboardFirthRow);
-        keyboard.add(keyboardSixthRow);
-        keyboard.add(keyboardSevenRow);
+//        keyboard.add(keyboardForthRow);
+//        keyboard.add(keyboardFirthRow);
+//        keyboard.add(keyboardSixthRow);
+//        keyboard.add(keyboardSevenRow);
         // and assign this list to our keyboard
         replyKeyboardMarkup.setKeyboard(keyboard);
         message.setReplyMarkup(replyKeyboardMarkup);
