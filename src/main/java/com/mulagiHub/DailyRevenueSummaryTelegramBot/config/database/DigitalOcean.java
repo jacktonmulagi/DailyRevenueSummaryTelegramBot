@@ -21,14 +21,14 @@ import javax.sql.DataSource;
 public class DigitalOcean {
     @Bean
     @ConfigurationProperties("spring.datasource.africom1")
-    public DataSourceProperties zureeDataSourceProperties() {
+    public DataSourceProperties digitalDataSourceProperties() {
         return new DataSourceProperties();
     }
 
     @Bean
     @ConfigurationProperties("spring.datasource.digital.configuration")
-    public DataSource zureeDataSource() {
-        return zureeDataSourceProperties().initializeDataSourceBuilder()
+    public DataSource digitalDataSource() {
+        return digitalDataSourceProperties().initializeDataSourceBuilder()
                 .type(HikariDataSource.class).build();
     }
 
@@ -36,7 +36,7 @@ public class DigitalOcean {
     public LocalContainerEntityManagerFactoryBean digitalEntityManagerFactory(
             EntityManagerFactoryBuilder builder) {
         return builder
-                .dataSource(zureeDataSource())
+                .dataSource(digitalDataSource())
                 .packages("com.mulagiHub.DailyRevenueSummaryTelegramBot.models.digital")
                 .build();
     }
