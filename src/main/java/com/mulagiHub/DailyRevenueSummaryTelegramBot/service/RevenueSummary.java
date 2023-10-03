@@ -87,7 +87,7 @@ public class RevenueSummary {
             revenues = zureeRevenueHandler.findAllRevenue(String.valueOf(now));
             System.out.println(revenues);
         }else if (Objects.equals(database, "digital")) {
-            summary.add(0,"Revenue Summary of Zuree on " + now);
+            summary.add(0,"Revenue Summary of Africom Limited VAS  on" + now);
             revenues = digitalRevenueHandler.findAllRevenue(String.valueOf(now));
             System.out.println(revenues);
         }
