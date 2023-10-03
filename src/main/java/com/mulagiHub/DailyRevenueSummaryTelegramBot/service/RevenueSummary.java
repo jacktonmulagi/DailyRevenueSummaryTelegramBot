@@ -2,10 +2,7 @@ package com.mulagiHub.DailyRevenueSummaryTelegramBot.service;
 
 
 import com.mulagiHub.DailyRevenueSummaryTelegramBot.dto.SumRevenue;
-import com.mulagiHub.DailyRevenueSummaryTelegramBot.handlers.AfricomRevenueHandler;
-import com.mulagiHub.DailyRevenueSummaryTelegramBot.handlers.BreakTimeRevenueHandler;
-import com.mulagiHub.DailyRevenueSummaryTelegramBot.handlers.TajBuzzRevenueHandler;
-import com.mulagiHub.DailyRevenueSummaryTelegramBot.handlers.ZureeRevenueHandler;
+import com.mulagiHub.DailyRevenueSummaryTelegramBot.handlers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +26,9 @@ public class RevenueSummary {
     @Autowired
     ZureeRevenueHandler zureeRevenueHandler;
 
+    @Autowired
+    DigitalRevenueHandler digitalRevenueHandler;
+
     public String summariesRevenue(String database) {
         List<String> summary = new ArrayList<>();
         LocalDate now = LocalDate.now();
@@ -47,6 +47,10 @@ public class RevenueSummary {
         else if (Objects.equals(database, "zuree")) {
             summary.add(0,"Revenue Summary of Zuree on " + now.minus(Period.ofDays(1)) + System.lineSeparator() );
             revenues = zureeRevenueHandler.findAllRevenue(String.valueOf(now.minus(Period.ofDays(1))));
+        }
+        else if (Objects.equals(database, "digital")) {
+            summary.add(0,"Revenue Summary of Africom Limited VAS  on " + now.minus(Period.ofDays(1)) + System.lineSeparator() );
+            revenues = digitalRevenueHandler.findAllRevenue(String.valueOf(now.minus(Period.ofDays(1))));
         }
 
         for (SumRevenue revenue : revenues) {
@@ -81,6 +85,10 @@ public class RevenueSummary {
         else if (Objects.equals(database, "zuree")) {
             summary.add(0,"Revenue Summary of Zuree on " + now);
             revenues = zureeRevenueHandler.findAllRevenue(String.valueOf(now));
+            System.out.println(revenues);
+        }else if (Objects.equals(database, "digital")) {
+            summary.add(0,"Revenue Summary of Zuree on " + now);
+            revenues = digitalRevenueHandler.findAllRevenue(String.valueOf(now));
             System.out.println(revenues);
         }
 

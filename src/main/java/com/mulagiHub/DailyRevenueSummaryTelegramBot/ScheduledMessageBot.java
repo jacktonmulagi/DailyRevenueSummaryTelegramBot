@@ -209,6 +209,24 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 
     @Scheduled(cron = "0 0 0 * * *")
+    public void sendAllRevenueDigitalMidNight() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenue("digital"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
     public void sendBreakTimeMidNight() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenue("breaktime"));
@@ -263,7 +281,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 //    @Scheduled(cron = "0 */2 * * * *")
 //sends at fixed rate
-    @Scheduled(fixedRate = 3600000)
+@Scheduled(fixedRate = 1200000)
     public void sendAfricomRevenueFixed() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenueFixes("africom"));
@@ -281,7 +299,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 
 
     }
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 1200000)
     public void sendBreakTimeRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenueFixes("breaktime"));
@@ -301,7 +319,7 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
     }
 
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 1200000)
     public void sendTajBuzRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenueFixes("tajbuzz"));
@@ -320,10 +338,28 @@ public class ScheduledMessageBot extends TelegramLongPollingBot {
 
     }
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 1200000)
     public void sendZureeRevenue() {
         SendMessage message = new SendMessage();
         message.setText(revenueSummary.summariesRevenueFixes("zuree"));
+        List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
+        for (Customer value : customer) {
+            message.setChatId(String.valueOf(value.getTelegramUserId()));
+
+            try {
+                execute(message);
+            } catch (TelegramApiException e) {
+                // log the
+            }
+        }
+
+
+    }
+
+    @Scheduled(fixedRate = 1200000)
+    public void sendDigitalRevenue() {
+        SendMessage message = new SendMessage();
+        message.setText(revenueSummary.summariesRevenueFixes("digital"));
         List<Customer> customer = userService.findAllByStatusOrderByCreatedAt();
         for (Customer value : customer) {
             message.setChatId(String.valueOf(value.getTelegramUserId()));
